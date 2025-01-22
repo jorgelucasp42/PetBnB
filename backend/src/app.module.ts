@@ -11,11 +11,13 @@ import { EnderecoModule } from './modules/endereco/endereco.module';
 import { GaleriaModule } from './modules/galeria/galeria.module';
 import { AvaliacaoModule } from './modules/avaliacao/avaliacao.module';
 import { DisponibilidadeModule } from './modules/disponibilidade/disponibilidade.module';
-import { PessoaController } from './modules/pessoa/pessoa.controller';
-import { PrismaService } from './prisma/prisma.service';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
+    // Módulo Prisma
+    PrismaModule,
+
     // Módulos principais
     PessoaModule,
     ClienteModule,
@@ -30,8 +32,7 @@ import { PrismaService } from './prisma/prisma.service';
     AvaliacaoModule,
     DisponibilidadeModule,
   ],
-  controllers: [AppController, PessoaController],
-  providers: [AppService, PrismaService],
-  exports: [PrismaService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

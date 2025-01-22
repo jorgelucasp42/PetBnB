@@ -14,103 +14,108 @@ datasource db {
 }
 
 model Pessoa {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  nome     String
-  cpf      String @unique
-  telefone String
-  foto     String
-  Cliente  Cliente?
+  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
+  nome               String
+  cpf                String              @unique
+  telefone           String
+  foto               String
+  Cliente            Cliente?
   PrestadorDeServico PrestadorDeServico?
 }
 
 model Cliente {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  pessoa Pessoa @relation(fields: [id], references: [id])
+  id           String                 @id @default(auto()) @map("_id") @db.ObjectId
+  pessoa       Pessoa                 @relation(fields: [id], references: [id])
+  pets         Pet[] // Relacionamento com Pet
+  solicitacoes SolicitacaoDeServico[] // Relacionamento com Solicitação
+  avaliacoes   Avaliacao[] // Relacionamento com Avaliação
 }
 
 model PrestadorDeServico {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  pessoa       Pessoa @relation(fields: [id], references: [id])
-  descricao    String
-  localizacao  String
-  avaliacao    Float
-  Endereco     Endereco[]
-  Galeria      Galeria[]
+  id              String                 @id @default(auto()) @map("_id") @db.ObjectId
+  pessoa          Pessoa                 @relation(fields: [id], references: [id])
+  descricao       String
+  localizacao     String
+  avaliacao       Float
+  Endereco        Endereco[]
+  Galeria         Galeria[]
   Disponibilidade Disponibilidade[]
-  Servicos     Servico[]
-  Avaliacoes   Avaliacao[]
+  Servicos        Servico[]
+  Avaliacoes      Avaliacao[]
+  solicitacoes    SolicitacaoDeServico[] // Relacionamento com Solicitação
 }
 
 model Pet {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  nome    String
-  especie String
-  raca    String
-  foto    String
-  dono_id String
-  Cliente Cliente @relation(fields: [dono_id], references: [id])
+  id           String                 @id @default(auto()) @map("_id") @db.ObjectId
+  nome         String
+  especie      String
+  raca         String
+  foto         String
+  dono_id      String
+  Cliente      Cliente                @relation(fields: [dono_id], references: [id])
+  solicitacoes SolicitacaoDeServico[] // Relacionamento com Solicitação
 }
 
 model Servico {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  tipo         String
-  preco        Float
-  prestador_id String
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  tipo               String
+  preco              Float
+  prestador_id       String
   PrestadorDeServico PrestadorDeServico @relation(fields: [prestador_id], references: [id])
 }
 
 model SolicitacaoDeServico {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  cliente_id   String
-  Cliente      Cliente @relation(fields: [cliente_id], references: [id])
-  pet_id       String
-  Pet          Pet @relation(fields: [pet_id], references: [id])
-  prestador_id String
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  cliente_id         String
+  Cliente            Cliente            @relation(fields: [cliente_id], references: [id])
+  pet_id             String
+  Pet                Pet                @relation(fields: [pet_id], references: [id])
+  prestador_id       String
   PrestadorDeServico PrestadorDeServico @relation(fields: [prestador_id], references: [id])
-  inicio       DateTime
-  fim          DateTime
-  preco_total  Float
-  status       String
+  inicio             DateTime
+  fim                DateTime
+  preco_total        Float
+  status             String
 }
 
 model Endereco {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  prestador_id String
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  prestador_id       String
   PrestadorDeServico PrestadorDeServico @relation(fields: [prestador_id], references: [id])
-  rua          String
-  numero       String
-  complemento  String
-  bairro       String
-  cidade       String
-  estado       String
-  cep          String
+  rua                String
+  numero             String
+  complemento        String
+  bairro             String
+  cidade             String
+  estado             String
+  cep                String
 }
 
 model Galeria {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  prestador_id String
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  prestador_id       String
   PrestadorDeServico PrestadorDeServico @relation(fields: [prestador_id], references: [id])
-  imagem       String
-  nome         String
-  descricao    String
+  imagem             String
+  nome               String
+  descricao          String
 }
 
 model Avaliacao {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  cliente_id   String
-  Cliente      Cliente @relation(fields: [cliente_id], references: [id])
-  prestador_id String
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  cliente_id         String
+  Cliente            Cliente            @relation(fields: [cliente_id], references: [id])
+  prestador_id       String
   PrestadorDeServico PrestadorDeServico @relation(fields: [prestador_id], references: [id])
-  rate         Int
-  comentario   String
-  data         DateTime
+  rate               Int
+  comentario         String
+  data               DateTime
 }
 
 model Disponibilidade {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  prestador_id String
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  prestador_id       String
   PrestadorDeServico PrestadorDeServico @relation(fields: [prestador_id], references: [id])
-  dia_semana   String
-  inicio       DateTime
-  fim          DateTime
+  dia_semana         String
+  inicio             DateTime
+  fim                DateTime
 }
