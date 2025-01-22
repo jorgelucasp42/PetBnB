@@ -12,6 +12,7 @@ import { GaleriaModule } from './modules/galeria/galeria.module';
 import { AvaliacaoModule } from './modules/avaliacao/avaliacao.module';
 import { DisponibilidadeModule } from './modules/disponibilidade/disponibilidade.module';
 import { PessoaController } from './modules/pessoa/pessoa.controller';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { PessoaController } from './modules/pessoa/pessoa.controller';
     DisponibilidadeModule,
   ],
   controllers: [AppController, PessoaController],
-  providers: [AppService],
+  providers: [AppService, PrismaService],
+  exports: [PrismaService],
 })
 export class AppModule {}
