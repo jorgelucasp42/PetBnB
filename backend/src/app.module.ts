@@ -11,6 +11,7 @@ import { EnderecoModule } from './modules/endereco/endereco.module';
 import { GaleriaModule } from './modules/galeria/galeria.module';
 import { AvaliacaoModule } from './modules/avaliacao/avaliacao.module';
 import { DisponibilidadeModule } from './modules/disponibilidade/disponibilidade.module';
+import { PessoaController } from './modules/pessoa/pessoa.controller';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { DisponibilidadeModule } from './modules/disponibilidade/disponibilidade
     AvaliacaoModule,
     DisponibilidadeModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, PessoaController],
   providers: [AppService],
 })
 export class AppModule {}
