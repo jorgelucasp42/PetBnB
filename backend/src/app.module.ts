@@ -13,7 +13,21 @@ import { AvaliacaoModule } from './modules/avaliacao/avaliacao.module';
 import { DisponibilidadeModule } from './modules/disponibilidade/disponibilidade.module';
 
 @Module({
-  imports: [PessoaModule, ClienteModule, PrestadorModule, PetModule, ServicoModule, SolicitacaoModule, EnderecoModule, GaleriaModule, AvaliacaoModule, DisponibilidadeModule],
+  imports: [
+    // Módulos principais
+    PessoaModule,
+    ClienteModule,
+    PrestadorModule,
+    PetModule,
+
+    // Funcionalidades do sistema
+    ServicoModule,
+    SolicitacaoModule,
+    EnderecoModule,
+    GaleriaModule,
+    AvaliacaoModule,
+    DisponibilidadeModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
