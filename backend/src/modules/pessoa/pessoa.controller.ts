@@ -1,12 +1,21 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { PessoaService } from './pessoa.service';
+import { CreatePessoaDTO } from './dto/pessoa.dto';
 
 @Controller('pessoas')
 export class PessoaController {
   constructor(private readonly pessoaService: PessoaService) {}
 
   @Post()
-  async create(@Body() data: any) {
+  async create(@Body() data: CreatePessoaDTO) {
     return this.pessoaService.create(data);
   }
 
