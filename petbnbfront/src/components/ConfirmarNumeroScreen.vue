@@ -23,10 +23,7 @@
             required
           />
         </div>
-        <button type="submit" class="primary-button">
-            Continuar
- 
-          </button>
+        <button type="submit" class="primary-button">Continuar</button>
       </form>
       <div class="divider">
         <span>ou</span>
@@ -64,8 +61,6 @@
     methods: {
       submitForm() {
         alert(`Enviado: ${this.phoneNumber}`);
-
-        this.$router.push("/confirmaNum");
       },
       setUserType(type) {
         this.userType = type;
@@ -198,9 +193,6 @@
 .social-login button img {
   width: 20px; /* Define o tamanho do ícone */
   height: 20px;
-}
-button:hover{
-  cursor: pointer;
 }
 
   </style>
