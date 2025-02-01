@@ -53,26 +53,39 @@
   </template>
   
   <script>
+  import { globalStore } from '@/store/globalStore.js'; // Removido computed
+  
   export default {
     data() {
       return {
         country: "Brasil",
         phoneNumber: "",
-        userType: "Cliente",
       };
+    },
+    computed: {
+      userType() {
+        return globalStore.userType;
+      },
     },
     methods: {
       submitForm() {
-        alert(`Enviado: ${this.phoneNumber}`);
+        if (!this.userType) {
+        alert("Por favor, selecione Cliente ou Prestador de Serviço antes de continuar.");
+        return;
+      }
 
+
+        alert(`Enviado: ${this.phoneNumber}`);
         this.$router.push({ path: '/confirmaNum', query: { phoneNumber: this.phoneNumber } });
       },
       setUserType(type) {
-        this.userType = type;
+        globalStore.userType = type;
       },
     },
   };
   </script>
+  
+  
   
   <style scoped>
 

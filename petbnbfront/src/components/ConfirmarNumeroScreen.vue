@@ -27,10 +27,10 @@
       voltar(){
         this.$router.push("/")
       },
-      // submitForm(){
-      //   this.$router.push('/confirmaNum');
+      submitForm(){
+        this.$router.push('/resgistro');
 
-      // }
+      }
     }
     
   };
