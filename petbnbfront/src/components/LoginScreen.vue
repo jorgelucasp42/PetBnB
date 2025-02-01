@@ -65,7 +65,7 @@
       submitForm() {
         alert(`Enviado: ${this.phoneNumber}`);
 
-        this.$router.push("/confirmaNum");
+        this.$router.push({ path: '/confirmaNum', query: { phoneNumber: this.phoneNumber } });
       },
       setUserType(type) {
         this.userType = type;
