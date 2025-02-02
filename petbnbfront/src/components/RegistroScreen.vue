@@ -24,6 +24,13 @@
       <input id="imageInput" type="file" @change="onImageChange" accept="image/*" hidden/>
     </div>
   </div>
+        
+        <label for="" v-show="userType !== 'Cliente'">Qual tipo de serviço você quer prestar?</label>
+        <select name="" id="" v-show="userType !== 'Cliente'">
+            <option value="Cuidador">Cuidador</option>
+            <option value="Treinador">Treinador</option>
+            <option value="Veterinario">Veterinario</option>
+        </select>
         <input type="submit" value="Continuar">
         
       </form>
@@ -36,13 +43,20 @@
     import { computed } from 'vue';
 
       export default {
+        
         setup() {
-            const userType = computed(() => globalStore.userType);
+            const userType = computed(() => globalStore.userType || "Outro");
+
+            const selectHidden = () => {
+            return userType.value === "Cliente" ? "hidden" : "";
+            };  
 
             return {
             userType,
+            selectHidden
             };
         },
+
         methods: {
             voltar(){
               this.$router.push('/confirmaNum')  
@@ -86,7 +100,7 @@
         justify-content: center;
       }
     
-      form input{
+      form input, form select{
         font-size: 1em;
         width: 100%;
         padding: 10px;
@@ -94,6 +108,9 @@
         border: 1px solid #ccc;
         border-radius: 15px;
         box-sizing: border-box;
+      }
+      form select{
+        box-shadow: 2px 4px 8px black;
       }
     
       p a{
