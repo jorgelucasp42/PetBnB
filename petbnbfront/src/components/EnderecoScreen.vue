@@ -2,37 +2,47 @@
 
     <header>
       <button @click="voltar">&#9001;</button>
-      <h1>Registo de {{ userType }}</h1>
+      <h1>Endereço {{ userType }}</h1>
     </header>
     <hr>
     <div class="container">
       <form @submit.prevent="submitForm">
         
-        <label for=""><Strong>Nome:</Strong></label>
-        <input type="Text"  placeholder="Informe seu nome">
-        <p></p>
-        <label for=""><Strong>CPF:</Strong></label>
-        <input type="Text"  placeholder="xxx.xxx.xxx-xx">
-        <p></p>
+        <label for=""><Strong>Informe seu Endereço:</Strong></label>
+        <p class="logradouroNumero"><input type="Text"  placeholder="Logradouro*">
+        
+        <input type="number"  placeholder="Número*">
+    </p>
+    <p class="BairroComplemento">
+    <input type="Text"  placeholder="Bairro*">
+    <input type="Text"  placeholder="Complemento">
+</p>
+<hr style="width: 100%;">
         <div>
-    <label for="imageUpload">Foto de Usuário:</label>
+    <label for="imageUpload">Galeria de Áreas:</label>
     <div class="image-upload">
       <label for="imageInput" class="upload-label">
         <img src="../assets/imgs/Foto.png" alt="Preview" />
-        <span v-if="!imagePreview">Adicionar Foto</span>
+        <!-- <span v-if="!imagePreview">Adicionar Foto</span> -->
       </label>
+ 
       <input id="imageInput" type="file" @change="onImageChange" accept="image/*" hidden/>
+
     </div>
   </div>
-        
-        <label for="" v-show="userType !== 'Cliente'">Qual tipo de serviço você quer prestar?</label>
-        <select name="" id="" v-show="userType !== 'Cliente'">
-            <option value="Cuidador">Cuidador</option>
-            <option value="Treinador">Treinador</option>
-            <option value="Veterinario">Veterinario</option>
-        </select>
-        <input type="submit" value="Continuar">
-        
+  <div class="nomeDescricao">
+    <input type="Text"  placeholder="Nome da Área">
+    <textarea placeholder="Escreva uma descrição..." rows="4" cols="50">
+    </textarea>
+    <input type="submit" value="salvar">
+    <hr>
+    <label for="">Valor por noite:</label>
+    <input type="number" name="valorPorNoite" id="" placeholder="R$">
+    <input type="submit" value="Continuar">
+
+
+</div>
+
       </form>
     </div>
     
@@ -59,10 +69,7 @@
 
         methods: {
             voltar(){
-              this.$router.push('/confirmaNum')  
-            },
-            submitForm(){
-                this.$router.push('/endereco')
+              this.$router.push('/resgistro')  
             }
         }
         
@@ -136,6 +143,48 @@
         cursor: pointer;
     
       }
-    
+    .logradouroNumero{
+        display: flex;
+        gap: 6px;
+        margin-bottom: -10px;
+    }
+    .logradouroNumero input[type="text"]{
+        width: 295%;
+    }
+
+    .BairroComplemento{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .image-upload {
+        display: flex;
+        justify-content: center; /* Centraliza horizontalmente */
+        align-items: center; 
+        flex-direction: column;
+        width: 100vw; /* Ajuste se necessário */
+}
+    img{
+        width: 60%;
+        height: 60%;
+        object-fit: cover;
+        border-radius: 15px;
+
+        
+    }
+
+    .nomeDescricao input, .nomeDescricao textarea{
+        font-size: 1em;
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        box-sizing: border-box;
+    }
+
+    input[value="salvar"]{
+        width: 50%;
+    }
       </style>
       
