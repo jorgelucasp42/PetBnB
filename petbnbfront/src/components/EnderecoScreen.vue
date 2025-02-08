@@ -70,7 +70,15 @@
         methods: {
             voltar(){
               this.$router.push('/resgistro')  
+            },
+            submitForm(){
+              if(this.userType === "Prestador"){
+                this.$router.push('/areaprestador')  
+              }else{
+                this.$router.push('/areaprestador')
+              }
             }
+
         }
         
       };

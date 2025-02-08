@@ -8,7 +8,7 @@
 <div class="container">
   <form @submit.prevent="submitForm">
     <label for="">informe o código que enviamos para o Número {{ phoneNumber }}</label>
-    <input type="number" max="6" placeholder="------">
+    <input type="number" placeholder="------">
     <p>Não recebeu? <a href="">Enviar novamente</a></p>
     <input type="submit" value="Continuar">
   </form>
@@ -47,13 +47,13 @@
     color: #333;
   }
   header button{
-    position: relative;
-    left: -130px;
-    top: 6px;
-    height: 35px;
-    width: auto;
-    border: none;
-    background-color: transparent;
+    position: absolute;
+        left: 13px;
+        top: 65px;
+        height: 35px;
+        width: auto;
+        border: none;
+        background-color: transparent;
   }
   form{
     /* border: 1px solid black; */
