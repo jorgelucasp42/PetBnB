@@ -13,36 +13,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Pessoa {
-  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
-  nome               String
-  cpf                String              @unique
-  telefone           String
-  foto               String?
-  Cliente            Cliente?
-  PrestadorDeServico PrestadorDeServico?
-}
-
 model Cliente {
   id           String                 @id @default(auto()) @map("_id") @db.ObjectId
-  pessoa       Pessoa                 @relation(fields: [id], references: [id])
-  pets         Pet[] // Relacionamento com Pet
-  solicitacoes SolicitacaoDeServico[] // Relacionamento com Solicitação
-  avaliacoes   Avaliacao[] // Relacionamento com Avaliação
+  nome         String
+  cpf          String                 @unique
+  telefone     String
+  foto         String?
+  pets         Pet[]
+  solicitacoes SolicitacaoDeServico[]
+  avaliacoes   Avaliacao[]
 }
 
 model PrestadorDeServico {
   id              String                 @id @default(auto()) @map("_id") @db.ObjectId
-  pessoa          Pessoa                 @relation(fields: [id], references: [id])
-  descricao       String
-  localizacao     String
+  nome            String
+  cpf             String                 @unique
+  telefone        String
+  foto            String?
+  descricao       String?
   avaliacao       Float
   Endereco        Endereco[]
   Galeria         Galeria[]
   Disponibilidade Disponibilidade[]
   Servicos        Servico[]
   Avaliacoes      Avaliacao[]
-  solicitacoes    SolicitacaoDeServico[] // Relacionamento com Solicitação
+  solicitacoes    SolicitacaoDeServico[]
 }
 
 model Pet {
