@@ -75,7 +75,7 @@
               if(this.userType === "Prestador"){
                 this.$router.push('/areaprestador')  
               }else{
-                this.$router.push('/areaprestador')
+                this.$router.push('/buscarservico')
               }
             }
 
