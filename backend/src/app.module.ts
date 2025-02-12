@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PessoaModule } from './modules/pessoa/pessoa.module';
 import { ClienteModule } from './modules/cliente/cliente.module';
 import { PrestadorModule } from './modules/prestador/prestador.module';
 import { PetModule } from './modules/pet/pet.module';
@@ -19,7 +18,6 @@ import { PrismaModule } from './prisma/prisma.module';
     PrismaModule,
 
     // Módulos principais
-    PessoaModule,
     ClienteModule,
     PrestadorModule,
     PetModule,
