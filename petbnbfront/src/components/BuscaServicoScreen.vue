@@ -19,7 +19,9 @@
   
         <h2>Resultados:</h2>
         <div class="carousel" ref="carouselRef">
-          <div v-for="(servico, index) in servicosFiltrados" :key="index" class="servico-card">
+          <div v-for="(servico, index) in servicosFiltrados" :key="index" class="servico-card" @click="irPrestador(servico)">
+            <p><img :src="servico.foto" alt=""></p>
+
             <p><strong>{{ servico.nome }}</strong></p>
             <p>{{ servico.tipo }}</p>
             <p>Localização: {{ servico.localizacao }}</p>
@@ -27,10 +29,12 @@
         </div>
       </div>
     </div>
+
   </template>
   
   <script>
-  import { ref } from 'vue';
+
+import { ref } from 'vue';
   import { useRouter } from 'vue-router';
   
   export default {
@@ -39,10 +43,11 @@
       const carouselRef = ref(null);
   
       const servicos = [
-        { nome: 'Mariana Costa - Cuidado Animal', tipo: 'Cuidadores', localizacao: 'Cohama, São Luís - MA' },
-        { nome: 'Clínica Veterinária Pet Saúde', tipo: 'Veterinaria', localizacao: 'Centro, São Luís - MA' },
-        { nome: 'Adestramento Inteligente', tipo: 'Adestramento', localizacao: 'Tirirical, São Luís - MA' }
-      ];
+      
+  {id: 1, nome: 'Mariana Costa - Cuidado Animal', tipo: 'Cuidadores', localizacao: 'Cohama, São Luís - MA', foto: require('@/assets/imgsUsers/cuidador01.jpg'), descricao: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },
+  {id: 2, nome: 'Clínica Veterinária Pet Saúde', tipo: 'Veterinaria', localizacao: 'Centro, São Luís - MA' , foto: require('@/assets/imgsUsers/Adestrador.jpg') , descricao: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },
+  {id: 3, nome: 'Adestramento Inteligente', tipo: 'Adestramento', localizacao: 'Tirirical, São Luís - MA', foto: require('@/assets/imgsUsers/veterinaria01.jpg') , descricao: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." }
+];
   
       const servicosFiltrados = ref(servicos);
   
@@ -54,13 +59,26 @@
         router.push('/');
       };
   
+        const irPrestador = (servico) => {
+      router.push({
+        path: '/prestadorperfil',
+        query: { servico: JSON.stringify(servico) } // Passando os dados na query
+      });
+    };
+
+
+
+  
       return {
         carouselRef,
         servicosFiltrados,
         filtrarServicos,
-        voltar
+        voltar,
+        irPrestador
       };
-    }
+    },
+
+
   };
   </script>
   
@@ -126,5 +144,8 @@
   }
   .carousel::-webkit-scrollbar {
     display: none;
+  }
+  img{
+    height: 100px;
   }
   </style>

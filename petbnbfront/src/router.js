@@ -5,6 +5,7 @@ import RegistroScreen from './components/RegistroScreen.vue';
 import EnderecoScreen from './components/EnderecoScreen.vue';
 import AreaPrestadorScreen from './components/AreaPrestadorScreen.vue';
 import BuscaServicoScreen from './components/BuscaServicoScreen.vue';
+import PrestaorPerfilScreen from './components/PrestaorPerfilScreen.vue';
 
 const routes = [
   { path: '/', component: LoginScreen },       // Rota para o componente Home
@@ -12,7 +13,8 @@ const routes = [
   { path: '/resgistro', component: RegistroScreen },
   { path: '/endereco', component: EnderecoScreen },
   { path: '/areaprestador', component: AreaPrestadorScreen},
-  { path: '/buscarservico', component: BuscaServicoScreen}
+  { path: '/buscarservico', component: BuscaServicoScreen},
+  { path: '/prestadorperfil', component: PrestaorPerfilScreen}
 ];
 
 const router = createRouter({
