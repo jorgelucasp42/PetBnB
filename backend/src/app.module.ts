@@ -11,6 +11,8 @@ import { GaleriaModule } from './modules/galeria/galeria.module';
 import { AvaliacaoModule } from './modules/avaliacao/avaliacao.module';
 import { DisponibilidadeModule } from './modules/disponibilidade/disponibilidade.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { PetController } from './modules/pet/pet.controller';
+import { PetController } from './modules/pet/pet.controller';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { PrismaModule } from './prisma/prisma.module';
     AvaliacaoModule,
     DisponibilidadeModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, PetController],
   providers: [AppService],
 })
 export class AppModule {}
