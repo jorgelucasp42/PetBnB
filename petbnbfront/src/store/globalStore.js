@@ -1,5 +1,6 @@
 import { reactive } from 'vue';
 
 export const globalStore = reactive({
-  userType: 'Cliente',
+  userType: localStorage.getItem('userType') || 'Cliente',
+  auth_token: localStorage.getItem('auth_token') || null,
 });
