@@ -16,7 +16,8 @@ export class ClienteController {
 
   @Post()
   async create(@Body() data: CreateClienteDTO) {
-    return this.clienteService.create(data);
+    const cliente = await this.clienteService.create(data);
+    return { auth_token: cliente.auth_token };
   }
   @Get()
   async findAll() {

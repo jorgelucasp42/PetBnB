@@ -13,16 +13,13 @@ export class CreateClienteDTO {
   nome: string;
 
   @IsString()
-  @Matches(/^\d{11}$/, {
-    message: 'CPF deve conter exatamente 11 dígitos numéricos.',
+  @Matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, {
+    message:
+      'CPF deve conter exatamente 11 dígitos numéricos, com pontos e traços no formato xxx.xxx.xxx-xx.',
   })
   cpf: string;
 
   @IsString()
-  @Matches(/^\+55\d{2}9?\d{8}$/, {
-    message:
-      'O número de telefone deve ser um número brasileiro válido no formato E.164',
-  })
   telefone: string;
 
   @IsOptional()
