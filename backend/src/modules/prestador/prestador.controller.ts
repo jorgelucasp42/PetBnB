@@ -17,7 +17,8 @@ export class PrestadorController {
 
   @Post()
   async create(@Body() data: CreatePrestadorDTO) {
-    return this.prestadorService.create(data);
+    const prestador = await this.prestadorService.create(data);
+    return { auth_token: prestador.auth_token };
   }
   @Get()
   async findAll() {
