@@ -11,6 +11,7 @@ import { GaleriaModule } from './modules/galeria/galeria.module';
 import { AvaliacaoModule } from './modules/avaliacao/avaliacao.module';
 import { DisponibilidadeModule } from './modules/disponibilidade/disponibilidade.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PrismaModule } from './prisma/prisma.module';
     GaleriaModule,
     AvaliacaoModule,
     DisponibilidadeModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
