@@ -10,11 +10,11 @@ import PrestaorPerfilScreen from './components/PrestaorPerfilScreen.vue';
 const routes = [
   { path: '/', component: LoginScreen },       // Rota para o componente Home
   { path: '/confirmaNum', component: ConfirmarNumeroScreen },
-  { path: '/resgistro', component: RegistroScreen },
+  { path: '/registro', component: RegistroScreen },
   { path: '/endereco', component: EnderecoScreen },
-  { path: '/areaprestador', component: AreaPrestadorScreen},
-  { path: '/buscarservico', component: BuscaServicoScreen},
-  { path: '/prestadorperfil', component: PrestaorPerfilScreen}
+  { path: '/areaprestador', component: AreaPrestadorScreen },
+  { path: '/buscarservico', component: BuscaServicoScreen },
+  { path: '/prestadorperfil', component: PrestaorPerfilScreen }
 ];
 
 const router = createRouter({
