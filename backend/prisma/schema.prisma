@@ -17,8 +17,10 @@ model Cliente {
   id           String                 @id @default(auto()) @map("_id") @db.ObjectId
   nome         String
   cpf          String                 @unique
-  telefone     String
+  telefone     String                 @unique
   foto         String?
+  auth_token   String?
+  expire_date  DateTime?
   pets         Pet[]
   solicitacoes SolicitacaoDeServico[]
   avaliacoes   Avaliacao[]
@@ -28,16 +30,27 @@ model PrestadorDeServico {
   id              String                 @id @default(auto()) @map("_id") @db.ObjectId
   nome            String
   cpf             String                 @unique
-  telefone        String
+  telefone        String                 @unique
   foto            String?
   descricao       String?
   avaliacao       Float
+  auth_token      String?
+  expire_date     DateTime?
   Endereco        Endereco[]
   Galeria         Galeria[]
   Disponibilidade Disponibilidade[]
   Servicos        Servico[]
   Avaliacoes      Avaliacao[]
   solicitacoes    SolicitacaoDeServico[]
+}
+
+model NumValidation {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  telephone String
+  code      String
+  userType  String
+
+  @@unique([telephone, userType])
 }
 
 model Pet {
