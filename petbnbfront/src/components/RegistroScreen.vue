@@ -1,38 +1,63 @@
+<!-- eslint-disable vue/html-indent -->
+<!-- eslint-disable vue/html-closing-bracket-newline -->
+<!-- eslint-disable vue/singleline-html-element-content-newline -->
+<!-- eslint-disable vue/max-attributes-per-line -->
+<!-- eslint-disable vue/html-self-closing -->
 <template>
   <header>
-    <button @click="voltar">&#9001;</button>
+    <button @click="voltar">
+      <span class="material-symbols-outlined"> arrow_left_alt </span>
+    </button>
     <h1>Registo de {{ userType }}</h1>
   </header>
   <hr />
   <div class="container">
     <form @submit.prevent="submitForm">
-      <label for=""><Strong>Nome:</Strong></label>
-      <input type="Text" placeholder="Informe seu nome" />
+      <label for="inome"><strong>Nome:</strong></label>
+      <input
+        id="inome"
+        v-model="nome"
+        type="Text"
+        placeholder="Informe seu nome"
+      />
       <p></p>
-      <label for=""><Strong>CPF:</Strong></label>
-      <input type="Text" placeholder="xxx.xxx.xxx-xx" />
+      <label for="icpf"><strong>CPF:</strong></label>
+      <input
+        id="icpf"
+        v-model="cpf"
+        v-mask="'###.###.###-##'"
+        type="Text"
+        placeholder="xxx.xxx.xxx-xx"
+      />
       <p></p>
       <div>
         <label for="imageUpload">Foto de Usuário:</label>
         <div class="image-upload">
           <label for="imageInput" class="upload-label">
-            <img :src="imagePreview || require('@/assets/imgs/Foto.png')" alt="Preview" />
+            <img
+              :src="imagePreview || require('@/assets/imgs/Foto.png')"
+              alt="Preview"
+            />
             <span v-if="!imagePreview">Adicionar Foto</span>
           </label>
           <input
             id="imageInput"
             type="file"
-            @change="onImageChange"
             accept="image/*"
             hidden
+            @change="onImageChange"
           />
         </div>
       </div>
 
-      <label for="" v-show="userType !== 'Cliente'"
+      <label v-show="userType !== 'Cliente'" for="itiposervice"
         >Qual tipo de serviço você quer prestar?</label
       >
-      <select name="" id="" v-show="userType !== 'Cliente'">
+      <select
+        v-show="userType !== 'Cliente'"
+        id="itiposervice"
+        v-model="tipoService"
+      >
         <option value="Cuidador">Cuidador</option>
         <option value="Treinador">Treinador</option>
         <option value="Veterinario">Veterinario</option>
@@ -43,45 +68,39 @@
 </template>
 
 <script>
-import { globalStore } from "@/store/globalStore";
-import { computed, ref } from "vue";
-
+import { useRegisterForm } from "@/composables/useRegisterForm";
 export default {
   setup() {
-    const userType = computed(() => globalStore.userType || "Outro");
-
-    const imagePreview = ref(null); // Variável para armazenar a pré-visualização da imagem
-
-    const selectHidden = () => {
-      return userType.value === "Cliente" ? "hidden" : "";
-    };
-
-    // Função chamada ao mudar a imagem
-    const onImageChange = (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          imagePreview.value = e.target.result; // Atualiza a imagem de pré-visualização
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-
-    return {
+    const {
       userType,
+      nome,
+      cpf,
+      tipoService,
       selectHidden,
       imagePreview,
       onImageChange,
+      submitForm,
+    } = useRegisterForm();
+
+    return {
+      userType,
+      nome,
+      cpf,
+      tipoService,
+      selectHidden,
+      imagePreview,
+      onImageChange,
+      submitForm,
     };
   },
-
+  computed: {
+    phoneNumber() {
+      return this.$route.query.phoneNumber;
+    },
+  },
   methods: {
     voltar() {
-      this.$router.push("/confirmaNum");
-    },
-    submitForm() {
-      this.$router.push("/endereco");
+      this.$router.push("/");
     },
   },
 };
@@ -89,24 +108,23 @@ export default {
 
 <style scoped>
 header {
+  margin-top: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
 }
 header h1 {
   font-size: 1.2rem;
   color: #333;
+  margin: 0 auto 0 auto;
 }
 header button {
-  position: absolute;
-  left: 13px;
-  top: 65px;
   height: 35px;
   width: auto;
   border: none;
   background-color: transparent;
 }
 form {
-  /* border: 1px solid black; */
   width: 80%;
   display: flex;
   justify-content: flex-start;
@@ -116,6 +134,7 @@ form {
 }
 .container {
   /* border: 2px solid red; */
+  margin-top: 20px;
   display: flex;
   justify-content: center;
 }
