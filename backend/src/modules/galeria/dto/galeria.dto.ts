@@ -14,6 +14,6 @@ export class CreateGaleriaDTO {
   
     @IsOptional()
     @IsString()
-    descricao?: string;
+    descricao?: string= '';;
   }
   
