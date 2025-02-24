@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { computed, ref } from "vue";
 import { globalStore } from "@/store/globalStore";
 import { useRouter } from "vue-router";
@@ -14,6 +15,7 @@ export function useRegisterForm() {
     const cpf = ref("");
     const tipoService = ref("");
     const imagePreview = ref(null);
+    const selectedFile = ref(null);
 
     const selectHidden = () => {
         return userType.value.toLowerCase() === "cliente" ? "hidden" : "";
@@ -22,6 +24,7 @@ export function useRegisterForm() {
     const onImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
+            selectedFile.value = file;
             const reader = new FileReader();
             reader.onload = function (e) {
                 imagePreview.value = e.target.result;
@@ -38,24 +41,20 @@ export function useRegisterForm() {
             alert('CPF inválido');
             return;
         }
-        const clienteData = {
-            nome: nome.value,
-            cpf: cpf.value,
-            telefone,
-            foto: imagePreview.value,
-        };
+        const formData = new FormData();
+        formData.append("nome", nome.value);
+        formData.append("cpf", cpf.value);
+        formData.append("telefone", telefone);
+        // Envia a foto somente se o arquivo foi selecionado
+        if (selectedFile.value) {
+            formData.append("foto", selectedFile.value);
+        }
 
-        const prestadorData = {
-            nome: nome.value,
-            cpf: cpf.value,
-            telefone,
-            foto: imagePreview.value
-        };
         try {
             if (userType.value === "Cliente") {
-                data = await registerCliente(clienteData);
+                data = await registerCliente(formData);
             } else if (userType.value === "Prestador") {
-                data = await registerPrestador(prestadorData);
+                data = await registerPrestador(formData);
             }
 
             const auth_token = data.auth_token;

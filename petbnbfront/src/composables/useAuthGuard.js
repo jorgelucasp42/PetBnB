@@ -7,7 +7,7 @@ export function useAuthGuard() {
     const router = useRouter();
 
     onMounted(async () => {
-        const token = globalStore.auth_token;
+        const token = localStorage.getItem("auth_token") || globalStore.auth_token;
         const userType = globalStore.userType;
 
         if (!token || token.trim() === '') {
@@ -16,7 +16,9 @@ export function useAuthGuard() {
         }
 
         const isValid = await validateToken(token, userType);
+
         if (!isValid) {
+            console.log("Token inválido.");
             globalStore.auth_token = null;
             localStorage.removeItem('auth_token');
             router.push('/');
