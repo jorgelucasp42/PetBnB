@@ -13,7 +13,7 @@ export class AuthService {
   constructor(private readonly prisma: PrismaService) {}
 
   async validateClienteToken(auth_token: string) {
-    const cliente = await this.prisma.cliente.findFirst({
+    const cliente = await this.prisma.cliente.findUnique({
       where: { auth_token },
     });
 
@@ -24,7 +24,7 @@ export class AuthService {
   }
 
   async validatePrestadorToken(auth_token: string) {
-    const prestador = await this.prisma.prestadorDeServico.findFirst({
+    const prestador = await this.prisma.prestadorDeServico.findUnique({
       where: { auth_token },
     });
 
@@ -78,6 +78,15 @@ export class AuthService {
     if (!validationEntry || validationEntry.code !== verificationCode) {
       throw new BadRequestException('Código de validação inválido.');
     }
+
+    await this.prisma.numValidation.delete({
+      where: {
+        telephone_userType: {
+          telephone: phoneNumber,
+          userType: userType.toLowerCase(),
+        },
+      },
+    });
 
     if (!user) {
       // Se o usuário não existir, redireciona para o registro
@@ -141,6 +150,7 @@ export class AuthService {
 
     const code = this.generateCode();
 
+    console.log('Codigo Atutenticação: ', code);
     if (!existingEntry) {
       return this.prisma.numValidation.create({
         data: {
