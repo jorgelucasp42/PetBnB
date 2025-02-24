@@ -7,13 +7,17 @@ export class ServicoService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create({ tipo, preco, prestador_id }: CreateServicoDTO) {
-    return this.prisma.servico.create({
+    const novoServico = await this.prisma.servico.create({
       data: {
         tipo,
         preco,
         prestador_id,
       },
+      select: {
+        id: true,
+      },
     });
+    return novoServico;
   }
 
   async findAll(): Promise<any[]> {
