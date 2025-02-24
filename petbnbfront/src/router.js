@@ -6,6 +6,8 @@ import EnderecoScreen from './components/EnderecoScreen.vue';
 import AreaPrestadorScreen from './components/AreaPrestadorScreen.vue';
 import BuscaServicoScreen from './components/BuscaServicoScreen.vue';
 import PrestaorPerfilScreen from './components/PrestaorPerfilScreen.vue';
+//import { component } from 'vue/types/umd';
+import CadastroPetScreen from './components/CadastroPetScreen.vue';
 
 const routes = [
   { path: '/', component: LoginScreen },       // Rota para o componente Home
@@ -14,7 +16,8 @@ const routes = [
   { path: '/endereco', component: EnderecoScreen },
   { path: '/areaprestador', component: AreaPrestadorScreen },
   { path: '/buscarservico', component: BuscaServicoScreen },
-  { path: '/prestadorperfil', component: PrestaorPerfilScreen }
+  { path: '/prestadorperfil', component: PrestaorPerfilScreen },
+  { path: '/cadastroPet', component: CadastroPetScreen}
 ];
 
 const router = createRouter({
