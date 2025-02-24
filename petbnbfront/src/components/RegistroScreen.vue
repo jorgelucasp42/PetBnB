@@ -8,7 +8,7 @@
     <button @click="voltar">
       <span class="material-symbols-outlined"> arrow_left_alt </span>
     </button>
-    <h1>Registo de {{ userType }}</h1>
+    <h1>Registro de {{ userType }}</h1>
   </header>
   <hr />
   <div class="container">
