@@ -3,7 +3,9 @@ import api from "./axiosAdapter";
 
 export async function registerCliente(clienteData) {
     try {
-        const response = await api.post("/cliente", clienteData);
+        const response = await api.post("/cliente", clienteData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
         return response.data;
     } catch (error) {
         console.error("Erro ao registrar cliente:", error);
@@ -13,7 +15,9 @@ export async function registerCliente(clienteData) {
 
 export async function registerPrestador(prestadorData) {
     try {
-        const response = await api.post("/prestador", prestadorData);
+        const response = await api.post("/prestador", prestadorData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
         return response.data;
     } catch (error) {
         console.error("Erro ao registrar prestador:", error);

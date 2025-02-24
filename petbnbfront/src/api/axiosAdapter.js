@@ -7,5 +7,16 @@ const api = axios.create({
         'Content-Type': 'application/json',
     },
 });
+api.interceptors.response.use(
+    response => response, // Retorna a resposta normalmente se estiver ok
+    error => {
+        // Verifica se há uma mensagem de erro na resposta do backend
+        const errorMessage = error.response?.data?.message || "Ocorreu um erro inesperado.";
 
+        alert(errorMessage);
+
+        // Retorna a rejeição para que os `catch` das chamadas ainda possam tratá-lo
+        return Promise.reject(error);
+    }
+);
 export default api;
