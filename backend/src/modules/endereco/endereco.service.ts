@@ -6,11 +6,20 @@ import { CreateEnderecoDTO } from './dto/endereco.dto';
 export class EnderecoService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create({ prestador_id, rua, numero, complemento, bairro, cidade, estado, cep }: CreateEnderecoDTO) {
+  async create({
+    prestador_id,
+    logradouro,
+    numero,
+    complemento,
+    bairro,
+    cidade,
+    estado,
+    cep,
+  }: CreateEnderecoDTO) {
     return this.prisma.endereco.create({
       data: {
         prestador_id,
-        rua,
+        logradouro,
         numero,
         complemento: complemento ?? '',
         bairro,

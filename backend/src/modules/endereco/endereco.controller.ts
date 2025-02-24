@@ -1,14 +1,31 @@
-import { Controller, Post, Get, Put, Delete, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Req,
+  HttpCode,
+} from '@nestjs/common';
 import { EnderecoService } from './endereco.service';
-import { CreateEnderecoDTO } from './dto/endereco.dto';
+import { CreateEnderecoDTO, EnderecoDTO } from './dto/endereco.dto';
 
 @Controller('endereco')
 export class EnderecoController {
   constructor(private readonly enderecoService: EnderecoService) {}
-
   @Post()
-  async create(@Body() data: CreateEnderecoDTO) {
-    return this.enderecoService.create(data);
+  @HttpCode(201)
+  async create(@Body() data: EnderecoDTO, @Req() req: any) {
+    const createData: CreateEnderecoDTO = {
+      ...data,
+      prestador_id: req.user.id as string,
+    };
+    const enderecoCriado = await this.enderecoService.create(createData);
+    const { prestador_id, ...enderecoSemPrestadorId } = enderecoCriado;
+
+    return enderecoSemPrestadorId;
   }
 
   @Get()
