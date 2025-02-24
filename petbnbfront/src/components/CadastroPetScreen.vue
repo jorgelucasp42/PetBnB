@@ -1,62 +1,54 @@
 <template>
-    <!-- eslint-disable vue/html-indent -->
-    <!-- eslint-disable vue/html-closing-bracket-newline -->
-    <!-- eslint-disable vue/singleline-html-element-content-newline -->
-    <!-- eslint-disable vue/max-attributes-per-line -->
-    <!-- eslint-disable vue/html-self-closing -->
     <header>
-      <button @click="voltar">&#9001;</button>
+      <button @click="voltar">
+        <span class="material-symbols-outlined"> arrow_left_alt </span>
+      </button>
       <h1>Cadastro Pet</h1>
     </header>
     <hr />
     <div class="container">
       <form @submit.prevent="submitForm">
-        <label for=""><Strong>Informe seu Endereço:</Strong></label>
+        <label for="endereco"><strong>Informe seu Endereço:</strong></label>
         <p class="logradouroNumero">
-          <input type="Text" placeholder="Logradouro*" />
-  
-          <input type="number" placeholder="Número*" />
+          <input id="logradouro" v-model="logradouro" type="text" placeholder="Logradouro*" />
+          <input id="numero" v-model="numero" type="number" placeholder="Número*" />
         </p>
         <p class="BairroComplemento">
-          <input type="Text" placeholder="Bairro*" />
-          <input type="Text" placeholder="Complemento" />
+          <input id="bairro" v-model="bairro" type="text" placeholder="Bairro*" />
+          <input id="complemento" v-model="complemento" type="text" placeholder="Complemento" />
         </p>
-        <hr style="width: 100%" />
+        <hr />
+  
         <div>
           <label for="imageUpload">Pets:</label>
           <div class="image-upload">
             <label for="imageInput" class="upload-label">
-              <img src="../assets/imgs/Foto.png" alt="Preview" />
-              <!-- <span v-if="!imagePreview">Adicionar Foto</span> -->
+              <img :src="imagePreview || require('@/assets/imgs/Foto.png')" alt="Preview" />
+              <span v-if="!imagePreview">Adicionar Foto</span>
             </label>
-  
-            <input
-              id="imageInput"
-              type="file"
-              accept="image/*"
-              hidden
-              @change="onImageChange"
-            />
+            <input id="imageInput" type="file" accept="image/*" hidden @change="onImageChange" />
           </div>
         </div>
+  
         <div class="nomeDescricao">
-          <input type="Text" placeholder="Nome do Pet" />
-          <select id="pets" name="pets" placeholder="Tipo Pet">
+          <input id="nomePet" v-model="nomePet" type="text" placeholder="Nome do Pet" />
+  
+          <select id="tipoPet" v-model="tipoPet">
             <option value="cachorro">Cachorro</option>
             <option value="gato">Gato</option>
             <option value="calopsita">Calopsita</option>
             <option value="canario">Canário-do-reino / Canário-belga</option>
             <option value="chinchila">Chinchila</option>
-            <option value="porquinho-da-india">Cobaia / Porquinho-da-Índia</option>
+            <option value="porquinho-da-india">Porquinho-da-Índia</option>
             <option value="coelho">Coelho</option>
             <option value="hamster">Hamster</option>
             <option value="periquito">Periquito-australiano</option>
             <option value="pombo">Pombo-doméstico</option>
-        </select>
-          <textarea placeholder="Escreva uma descrição..." rows="4" cols="50">
-          </textarea>
-          <input type="submit" value="salvar" />
-
+          </select>
+  
+          <textarea v-model="descricao" placeholder="Escreva uma descrição..." rows="4"></textarea>
+  
+          <input type="submit" value="Salvar" />
           <input type="submit" value="Continuar" />
         </div>
       </form>
@@ -64,73 +56,92 @@
   </template>
   
   <script>
-  import { globalStore } from "@/store/globalStore";
-  import { computed } from "vue";
+  import { ref } from "vue";
   
   export default {
     setup() {
-      const userType = computed(() => globalStore.userType || "Outro");
+      const logradouro = ref("");
+      const numero = ref("");
+      const bairro = ref("");
+      const complemento = ref("");
+      const nomePet = ref("");
+      const tipoPet = ref("");
+      const descricao = ref("");
+      const imagePreview = ref(null);
   
-      const selectHidden = () => {
-        return userType.value === "Cliente" ? "hidden" : "";
+      const onImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            imagePreview.value = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+  
+      const voltar = () => {
+        window.history.back();
+      };
+  
+      const submitForm = () => {
+        console.log("Formulário enviado!");
       };
   
       return {
-        userType,
-        selectHidden,
+        logradouro,
+        numero,
+        bairro,
+        complemento,
+        nomePet,
+        tipoPet,
+        descricao,
+        imagePreview,
+        onImageChange,
+        voltar,
+        submitForm,
       };
-    },
-  
-    methods: {
-      voltar() {
-        this.$router.push("/resgistro");
-      },
-      submitForm() {
-        if (this.userType === "Prestador") {
-          this.$router.push("/areaprestador");
-        } else {
-          this.$router.push("/buscarservico");
-        }
-      },
     },
   };
   </script>
   
   <style scoped>
   header {
+    margin-top: 20px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
   }
+  
   header h1 {
     font-size: 1.2rem;
     color: #333;
+    margin: 0 auto;
   }
+  
   header button {
-    position: absolute;
-    left: 13px;
-    top: 65px;
     height: 35px;
     width: auto;
     border: none;
     background-color: transparent;
   }
-  form {
-    /* border: 1px solid black; */
-    width: 80%;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-  }
+  
   .container {
-    /* border: 2px solid red; */
+    margin-top: 20px;
     display: flex;
     justify-content: center;
   }
   
+  form {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  
   form input,
-  form select {
+  form select,
+  form textarea {
     font-size: 1em;
     width: 100%;
     padding: 10px;
@@ -139,12 +150,9 @@
     border-radius: 15px;
     box-sizing: border-box;
   }
+  
   form select {
     box-shadow: 2px 4px 8px black;
-  }
-  
-  p a {
-    color: black;
   }
   
   input[type="submit"] {
@@ -156,53 +164,38 @@
     border-radius: 5px;
     font-size: 1rem;
     margin-top: 15px;
+    cursor: pointer;
   }
   
   input[type="submit"]:hover {
     background-color: #00a0009d;
-    cursor: pointer;
   }
+  
+  .image-upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70vw;
+    height: 30vh;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .image-upload img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
   .logradouroNumero {
     display: flex;
     gap: 6px;
-    margin-bottom: -10px;
-  }
-  .logradouroNumero input[type="text"] {
-    width: 295%;
   }
   
   .BairroComplemento {
     display: flex;
     flex-direction: column;
     gap: 5px;
-  }
-  .image-upload {
-    display: flex;
-    justify-content: center; /* Centraliza horizontalmente */
-    align-items: center;
-    flex-direction: column;
-    width: 100vw; /* Ajuste se necessário */
-  }
-  img {
-    width: 60%;
-    height: 60%;
-    object-fit: cover;
-    border-radius: 15px;
-  }
-  
-  .nomeDescricao input,
-  .nomeDescricao textarea {
-    font-size: 1em;
-    width: 100%;
-    padding: 10px;
-    margin-top: 15px;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    box-sizing: border-box;
-  }
-  
-  input[value="salvar"] {
-    width: 50%;
   }
   </style>
   
