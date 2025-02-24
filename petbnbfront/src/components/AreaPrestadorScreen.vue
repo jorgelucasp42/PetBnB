@@ -1,21 +1,38 @@
 <template>
-    <div class="area-prestador">
-      <header>
-        <button @click="voltar">&#9001;</button>
-        <h1>Área do Prestador</h1>
-      </header>
-      <hr />
-      <div class="container">
-        <h2>Mensagens Recentes:</h2>
-        <div class="carousel" ref="carouselRef" @pointerdown="startDrag" @pointerup="endDrag" @pointermove="onDrag">
-          <div v-for="(mensagem, index) in mensagens" :key="index" class="mensagem-card">
-            <p><strong>{{ mensagem.nome }}</strong></p>
-            <p>{{ mensagem.data }}</p>
-            <p>{{ mensagem.texto }}</p>
-          </div>
+  <!-- eslint-disable vue/html-indent -->
+  <!-- eslint-disable vue/html-closing-bracket-newline -->
+  <!-- eslint-disable vue/singleline-html-element-content-newline -->
+  <!-- eslint-disable vue/max-attributes-per-line -->
+  <!-- eslint-disable vue/html-self-closing -->
+  <header>
+    <HamburguerMenu :usuario="usuario" />
+    <h1>Área do Prestador</h1>
+  </header>
+  <hr />
+  <div class="area-prestador">
+    <div class="container">
+      <h2>Mensagens Recentes:</h2>
+      <div
+        ref="carouselRef"
+        class="carousel"
+        @pointerdown="startDrag"
+        @pointerup="endDrag"
+        @pointermove="onDrag"
+      >
+        <div
+          v-for="(mensagem, index) in mensagens"
+          :key="index"
+          class="mensagem-card"
+        >
+          <p>
+            <strong>{{ mensagem.nome }}</strong>
+          </p>
+          <p>{{ mensagem.data }}</p>
+          <p>{{ mensagem.texto }}</p>
         </div>
+      </div>
 
-        <h2>Seu Período Disponível:</h2>
+      <h2>Seu Período Disponível:</h2>
       <div class="calendario">
         <table>
           <thead>
@@ -31,32 +48,53 @@
           </thead>
           <tbody>
             <tr v-for="(week, index) in calendario" :key="index">
-              <td v-for="(day, dayIndex) in week" :key="dayIndex" :class="{ 'pendente': isPendente(day) }">
-                {{ day || '' }}
+              <td
+                v-for="(day, dayIndex) in week"
+                :key="dayIndex"
+                :class="{ pendente: isPendente(day) }"
+              >
+                {{ day || "" }}
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-  
-        <h2>Pedidos Pendentes:</h2>
-        <div class="carousel" ref="pedidoCarouselRef">
-          <div v-for="(pedido, index) in pedidos" :key="index" class="pedido-card">
-            <p><strong>{{ pedido.nome }}</strong></p>
-            <p>Animal: {{ pedido.animal }}</p>
-            <p>Raça: {{ pedido.raca }}</p>
-            <p>Período: {{ pedido.periodo }}</p>
-          </div>
+
+      <h2>Pedidos Pendentes:</h2>
+      <div ref="pedidoCarouselRef" class="carousel">
+        <div
+          v-for="(pedido, index) in pedidos"
+          :key="index"
+          class="pedido-card"
+        >
+          <p>
+            <strong>{{ pedido.nome }}</strong>
+          </p>
+          <p>Animal: {{ pedido.animal }}</p>
+          <p>Raça: {{ pedido.raca }}</p>
+          <p>Período: {{ pedido.periodo }}</p>
         </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-import { ref } from 'vue';
+  </div>
+</template>
+
+<script>
+import { ref } from "vue";
+import usePrestador from "@/composables/usePrestador";
+import HamburguerMenu from "./reusable/HamburguerMenu.vue";
+import { useAuthGuard } from "@/composables/useAuthGuard";
+import { globalStore } from "@/store/globalStore";
 
 export default {
+  components: {
+    HamburguerMenu,
+  },
   setup() {
+    useAuthGuard();
+    const token = globalStore.auth_token;
+    const { usuario, loading, error } = usePrestador(token);
+
     const carouselRef = ref(null);
     const pedidoCarouselRef = ref(null);
     let isDragging = false;
@@ -117,38 +155,93 @@ export default {
     const isSelecionado = (dia) => {
       if (!dia) return false;
       const data = new Date(anoAtual, mesAtual, dia);
-      return dataInicio.value && dataFim.value && data >= dataInicio.value && data <= dataFim.value;
+      return (
+        dataInicio.value &&
+        dataFim.value &&
+        data >= dataInicio.value &&
+        data <= dataFim.value
+      );
     };
 
     // Períodos pendentes
     const periodosPendentes = [
-      { inicio: new Date(anoAtual, mesAtual, 22), fim: new Date(anoAtual, mesAtual, 27) },
-      { inicio: new Date(anoAtual, mesAtual, 15), fim: new Date(anoAtual, mesAtual, 19) }
+      {
+        inicio: new Date(anoAtual, mesAtual, 22),
+        fim: new Date(anoAtual, mesAtual, 27),
+      },
+      {
+        inicio: new Date(anoAtual, mesAtual, 15),
+        fim: new Date(anoAtual, mesAtual, 19),
+      },
     ];
 
     const isPendente = (day) => {
       if (!day) return false;
       const date = new Date(anoAtual, mesAtual, day);
-      return periodosPendentes.some(periodo => date >= periodo.inicio && date <= periodo.fim);
+      return periodosPendentes.some(
+        (periodo) => date >= periodo.inicio && date <= periodo.fim
+      );
     };
 
     // Mensagens e pedidos
     const mensagens = [
-      { nome: 'Renato', data: 'Hoje', texto: 'Mensagem de exemplo 1' },
-      { nome: 'Marcos Almeida', data: 'Há 2 dias', texto: 'Mensagem de exemplo 2' },
-      { nome: 'Renato', data: 'Hoje', texto: 'Mensagem de exemplo 1' },
-      { nome: 'Marcos Almeida', data: 'Há 2 dias', texto: 'Mensagem de exemplo 2' },
-      { nome: 'Renato', data: 'Hoje', texto: 'Mensagem de exemplo 1' },
-      { nome: 'Marcos Almeida', data: 'Há 2 dias', texto: 'Mensagem de exemplo 2' }
+      { nome: "Renato", data: "Hoje", texto: "Mensagem de exemplo 1" },
+      {
+        nome: "Marcos Almeida",
+        data: "Há 2 dias",
+        texto: "Mensagem de exemplo 2",
+      },
+      { nome: "Renato", data: "Hoje", texto: "Mensagem de exemplo 1" },
+      {
+        nome: "Marcos Almeida",
+        data: "Há 2 dias",
+        texto: "Mensagem de exemplo 2",
+      },
+      { nome: "Renato", data: "Hoje", texto: "Mensagem de exemplo 1" },
+      {
+        nome: "Marcos Almeida",
+        data: "Há 2 dias",
+        texto: "Mensagem de exemplo 2",
+      },
     ];
 
     const pedidos = [
-      { nome: 'Renato', animal: 'Cachorro', raca: 'Golden Retriever', periodo: '22 dez - 27 dez' },
-      { nome: 'Mariana', animal: 'Gato', raca: 'Siamês', periodo: '15 jan - 20 jan' },
-      { nome: 'Renato', animal: 'Cachorro', raca: 'Golden Retriever', periodo: '22 dez - 27 dez' },
-      { nome: 'Mariana', animal: 'Gato', raca: 'Siamês', periodo: '15 jan - 20 jan' },
-      { nome: 'Renato', animal: 'Cachorro', raca: 'Golden Retriever', periodo: '22 dez - 27 dez' },
-      { nome: 'Mariana', animal: 'Gato', raca: 'Siamês', periodo: '15 jan - 20 jan' }
+      {
+        nome: "Renato",
+        animal: "Cachorro",
+        raca: "Golden Retriever",
+        periodo: "22 dez - 27 dez",
+      },
+      {
+        nome: "Mariana",
+        animal: "Gato",
+        raca: "Siamês",
+        periodo: "15 jan - 20 jan",
+      },
+      {
+        nome: "Renato",
+        animal: "Cachorro",
+        raca: "Golden Retriever",
+        periodo: "22 dez - 27 dez",
+      },
+      {
+        nome: "Mariana",
+        animal: "Gato",
+        raca: "Siamês",
+        periodo: "15 jan - 20 jan",
+      },
+      {
+        nome: "Renato",
+        animal: "Cachorro",
+        raca: "Golden Retriever",
+        periodo: "22 dez - 27 dez",
+      },
+      {
+        nome: "Mariana",
+        animal: "Gato",
+        raca: "Siamês",
+        periodo: "15 jan - 20 jan",
+      },
     ];
 
     // Lógica de arrastar para o carrossel
@@ -185,72 +278,75 @@ export default {
       selecionarData,
       isSelecionado,
       dataInicio,
-      dataFim
+      dataFim,
+      usuario,
+      loading,
+      error,
     };
   },
   methods: {
     voltar() {
-      this.$router.push('/confirmaNum');
-    }
-  }
+      this.$router.push("/confirmaNum");
+    },
+  },
 };
 </script>
-  
-  <style scoped>
-  .area-prestador {
-    padding: 20px;
-  }
-  
-  header {
-    display: flex;
-    justify-content: center;
-  }
-  header h1 {
-    font-size: 1.2rem;
-    color: #333;
-  }
-  header button {
-    position: absolute;
-    left: 13px;
-    top: 65px;
-    height: 35px;
-    width: auto;
-    border: none;
-    background-color: transparent;
-  }
-  .container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  .carousel {
-    display: flex;
-    overflow-x: auto;
-    scroll-behavior: auto;
-    gap: 10px;
-  }
-  .mensagem-card, .pedido-card {
-    min-width: 200px;
-    border: 2px #000 solid;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    text-align: left;
-  }
-  .pedido-card {
-    border: 2px #000 solid;
-  }
-  .carousel::-webkit-scrollbar {
-    display: none;
-  }
 
+<style scoped>
+.area-prestador {
+  padding: 20px;
+}
+header {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header h1 {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 0 auto 0 auto;
+}
+header button {
+  height: 35px;
+  width: auto;
+  border: none;
+  background-color: transparent;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: auto;
+  gap: 10px;
+}
+.mensagem-card,
+.pedido-card {
+  min-width: 200px;
+  border: 2px #000 solid;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: left;
+}
+.pedido-card {
+  border: 2px #000 solid;
+}
+.carousel::-webkit-scrollbar {
+  display: none;
+}
 
-  .calendario table {
+.calendario table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.calendario th, .calendario td {
+.calendario th,
+.calendario td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
@@ -271,5 +367,4 @@ export default {
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-  </style>
-  
+</style>
