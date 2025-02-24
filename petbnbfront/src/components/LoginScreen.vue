@@ -30,14 +30,6 @@
       <span>ou</span>
     </div>
     <div class="social-login">
-      <button class="social-button google">
-        <img src="../assets/icons/icons8-google-logo-48.png" alt="" /> Continuar
-        com Google
-      </button>
-      <button class="social-button facebook">
-        <img src="../assets/icons/icons8-facebook-48.png" alt="" /> Continuar
-        com Facebook
-      </button>
       <button class="social-button email">
         <img src="../assets/icons/icons8-nova-mensagem-48.png" alt="" />
         Continuar com Email
