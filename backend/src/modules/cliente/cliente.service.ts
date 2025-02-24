@@ -2,23 +2,35 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateClienteDTO } from './dto/cliente.dto';
 import { randomBytes } from 'crypto';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class ClienteService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly uploadService: UploadService,
+  ) {}
 
   async create({ nome, cpf, foto, telefone }: CreateClienteDTO) {
+    const existingCliente = await this.prisma.cliente.findUnique({
+      where: { cpf },
+    });
+
+    if (existingCliente) {
+      throw new BadRequestException('CPF já cadastrado');
+    }
+
+    // Se houver foto e for necessário realizar o upload
+    if (foto) {
+      const uploadedUrl = await this.uploadService.uploadImage(
+        foto,
+        cpf,
+        'cliente',
+      );
+      foto = uploadedUrl; // Atualiza com a URL retornada
+    }
+
     try {
-      // Verifica se o CPF já existe
-      const existingCliente = await this.prisma.cliente.findUnique({
-        where: { cpf },
-      });
-
-      if (existingCliente) {
-        throw new BadRequestException('CPF já cadastrado');
-      }
-
-      // Criação do cliente
       const cliente = await this.prisma.cliente.create({
         data: {
           nome,
@@ -30,7 +42,6 @@ export class ClienteService {
 
       const authToken = `${cliente.id}-${randomBytes(16).toString('hex')}`;
 
-      // Atualiza o auth_token
       await this.prisma.cliente.update({
         where: { id: cliente.id },
         data: {
@@ -64,5 +75,11 @@ export class ClienteService {
 
   async remove(id: string): Promise<any> {
     return this.prisma.cliente.delete({ where: { id } });
+  }
+
+  async findByAuthToken(authToken: string) {
+    return await this.prisma.cliente.findUnique({
+      where: { auth_token: authToken },
+    });
   }
 }

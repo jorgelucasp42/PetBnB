@@ -24,6 +24,5 @@ export class CreateClienteDTO {
 
   @IsOptional()
   @IsString()
-  @IsUrl()
   foto?: string;
 }

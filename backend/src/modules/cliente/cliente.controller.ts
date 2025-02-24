@@ -6,16 +6,30 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ClienteService } from './cliente.service';
 import { CreateClienteDTO } from './dto/cliente.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 
 @Controller('cliente')
 export class ClienteController {
   constructor(private readonly clienteService: ClienteService) {}
 
   @Post()
-  async create(@Body() data: CreateClienteDTO) {
+  @UseInterceptors(FileInterceptor('foto', { storage: memoryStorage() }))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() data: CreateClienteDTO,
+  ) {
+    if (file) {
+      // Converte o buffer para base64 e forma a data URL
+      const base64 = file.buffer.toString('base64');
+      const dataUrl = `data:${file.mimetype};base64,${base64}`;
+      data.foto = dataUrl;
+    }
     const cliente = await this.clienteService.create(data);
     return { auth_token: cliente.auth_token };
   }
