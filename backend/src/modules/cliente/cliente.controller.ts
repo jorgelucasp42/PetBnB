@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -42,7 +44,16 @@ export class ClienteController {
   async findOne(@Param('id') id: string) {
     return this.clienteService.findOne(id);
   }
+  @Get('token/:token')
+  async findOneByAuthToken(@Param('token') token: string) {
+    const userData = await this.clienteService.findByAuthToken(token);
+    if (!userData) {
+      throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
+    }
 
+    const { id, ...responseData } = userData;
+    return responseData;
+  }
   @Put(':id')
   async update(@Param('id') id: string, @Body() data: any) {
     return this.clienteService.update(id, data);
