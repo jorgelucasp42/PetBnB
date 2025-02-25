@@ -40,8 +40,13 @@
             <span style="margin-right: 8px"
               >{{ usuario?.nome?.split(" ")[0] }} {{ " - " }}</span
             >
-            {{ usuario?.avaliacao }}
-            <span class="material-symbols-outlined">star</span>
+            <span
+              v-if="globalStore.userType.toLowerCase() === 'prestador'"
+              style="display: flex; align-items: center"
+            >
+              {{ usuario?.avaliacao }}
+              <span class="material-symbols-outlined">star</span>
+            </span>
           </p>
         </li>
         <li style="margin-top: 30px">
@@ -71,6 +76,7 @@ export default {
   data() {
     return {
       isMenuOpen: false,
+      globalStore,
     };
   },
   methods: {

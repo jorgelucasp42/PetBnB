@@ -1,9 +1,12 @@
 <template>
+  <!-- eslint-disable vue/html-indent -->
+  <!-- eslint-disable vue/html-closing-bracket-newline -->
+  <!-- eslint-disable vue/singleline-html-element-content-newline -->
+  <!-- eslint-disable vue/max-attributes-per-line -->
+  <!-- eslint-disable vue/html-self-closing -->
   <div class="area-prestador">
     <header>
-      <button @click="voltar">
-        <span class="material-symbols-outlined"> arrow_left_alt </span>
-      </button>
+      <HamburguerMenu :usuario="usuario" />
       <input type="text" placeholder="Busque um lugar" />
     </header>
     <div class="container">
@@ -20,7 +23,7 @@
       </div>
 
       <h2>Resultados:</h2>
-      <div class="carousel" ref="carouselRef">
+      <div ref="carouselRef" class="carousel">
         <div
           v-for="(servico, index) in servicosFiltrados"
           :key="index"
@@ -45,10 +48,18 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthGuard } from "@/composables/useAuthGuard";
 import { globalStore } from "@/store/globalStore";
+import HamburguerMenu from "./reusable/HamburguerMenu.vue";
+import useCliente from "@/composables/useCliente";
 
 export default {
+  components: {
+    HamburguerMenu,
+  },
   setup() {
     useAuthGuard();
+    const token = globalStore.auth_token;
+    const { usuario, loading, error } = useCliente(token);
+
     const router = useRouter();
     const carouselRef = ref(null);
 
@@ -58,7 +69,8 @@ export default {
         nome: "Mariana Costa - Cuidado Animal",
         tipo: "Cuidadores",
         localizacao: "Cohama, São Luís - MA",
-        foto: require("@/assets/imgsUsers/cuidador01.jpg"),
+        foto: new URL("@/assets/imgsUsers/cuidador01.jpg", import.meta.url)
+          .href,
         descricao:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       },
@@ -67,7 +79,8 @@ export default {
         nome: "Clínica Veterinária Pet Saúde",
         tipo: "Veterinaria",
         localizacao: "Centro, São Luís - MA",
-        foto: require("@/assets/imgsUsers/Adestrador.jpg"),
+        foto: new URL("@/assets/imgsUsers/Adestrador.jpg", import.meta.url)
+          .href,
         descricao:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       },
@@ -76,7 +89,8 @@ export default {
         nome: "Adestramento Inteligente",
         tipo: "Adestramento",
         localizacao: "Tirirical, São Luís - MA",
-        foto: require("@/assets/imgsUsers/veterinaria01.jpg"),
+        foto: new URL("@/assets/imgsUsers/veterinaria01.jpg", import.meta.url)
+          .href,
         descricao:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       },
@@ -112,6 +126,9 @@ export default {
       filtrarServicos,
       voltar,
       irPrestador,
+      usuario,
+      loading,
+      error,
     };
   },
 };
