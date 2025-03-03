@@ -20,10 +20,31 @@ export class ServicoService {
     return novoServico;
   }
 
-  async findAll(): Promise<any[]> {
-    return this.prisma.servico.findMany({
-      include: { PrestadorDeServico: true },
+  async findAll() {
+    const servicos = await this.prisma.servico.findMany({
+      include: {
+        PrestadorDeServico: {
+          include: {
+            endereco: true,
+            Galeria: { take: 1 }, // Pega apenas a primeira imagem da galeria
+          },
+        },
+      },
     });
+
+    return servicos.map((servico) => ({
+      id: servico.id,
+      nome: servico.PrestadorDeServico.nome,
+      tipo: servico.tipo,
+      localizacao: servico.PrestadorDeServico.endereco
+        ? `${servico.PrestadorDeServico.endereco.bairro}, ${servico.PrestadorDeServico.endereco.cidade} - ${servico.PrestadorDeServico.endereco.estado}`
+        : 'Localização não informada',
+      foto:
+        servico.PrestadorDeServico.Galeria.length > 0
+          ? servico.PrestadorDeServico.Galeria[0].imagem
+          : null,
+      descricao: servico.PrestadorDeServico.descricao || '',
+    }));
   }
 
   async findOne(id: string): Promise<any> {
