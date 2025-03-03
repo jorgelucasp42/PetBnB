@@ -38,3 +38,23 @@ export async function createGaleria(galeriaFormData) {
         throw error;
     }
 }
+
+export async function getServicos() {
+    const token = localStorage.getItem("auth_token");
+    const userType = localStorage.getItem("userType");
+    console.log(token);
+
+    try {
+        const response = await api.get("/servico", {
+            headers: {
+                "Content-Type": "application/json",
+                "authToken": token,
+                "userType": userType,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar serviços:", error);
+        throw error;
+    }
+}
