@@ -1,5 +1,8 @@
 <template>
   <!-- Informações do prestador -->
+  <button @click="voltar" id="voltar">
+      <span class="material-symbols-outlined"> arrow_left_alt </span>
+    </button>
   <div v-if="prestador" id="infos">
     <img :src="prestador.foto" alt="Imagem do prestador" id="fotoPrestador">
     <h2>{{ prestador.nome }}</h2>
@@ -48,6 +51,11 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 export default {
+  methods: {
+    voltar() {
+      this.$router.push("/buscarservico");
+    },
+  },
   setup() {
     const route = useRoute();
 
@@ -98,9 +106,11 @@ export default {
         grabCursor: true,
       });
     });
+    
 
     return { prestador, areas };
   }
+  
 };
 </script>
 
@@ -169,7 +179,13 @@ export default {
 .swiper-button-next::after, .swiper-button-prev::after {
   font-size: 20px;
 }
-
+#voltar {
+  height: 35px;
+  width: auto;
+  border: none;
+  background-color: transparent;
+  display: flex;
+}
 .btnSolicitar{
   width: 100%;
   padding: 15px;
@@ -180,4 +196,7 @@ export default {
   font-size: 1rem;
 
 }
+
+
+
 </style>
