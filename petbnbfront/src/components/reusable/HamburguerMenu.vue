@@ -1,69 +1,89 @@
-<!-- eslint-disable vue/html-indent -->
-<!-- eslint-disable vue/html-closing-bracket-newline -->
-<!-- eslint-disable no-unused-vars -->
-<!-- eslint-disable no-unused-vars -->
-<!-- eslint-disable no-unused-vars -->
-<!-- eslint-disable vue/html-self-closing -->
-<!-- eslint-disable vue/singleline-html-element-content-newline -->
-<!-- eslint-disable vue/max-attributes-per-line -->
 <template>
   <div>
-    <button class="hamburguer-button" @click="toggleMenu">
+    <button class="text-2xl cursor-pointer" @click="toggleMenu">
       <span class="material-symbols-outlined">menu</span>
     </button>
-    <div v-if="isMenuOpen" class="hamburguer-menu">
-      <button class="voltar-button" @click="toggleMenu">
-        <span class="material-symbols-outlined">close</span>
-        <p style="margin: 0 auto 0 0">Fechar</p>
-      </button>
-      <ul class="menu-list">
-        <li
-          style="
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 1px solid rgba(63, 63, 63, 0.546);
-            width: 50%;
-          "
+
+    <Transition :css="false" @enter="onEnter" @leave="onLeave">
+      <div v-if="isMenuOpen" class="fixed inset-0 z-40">
+        <!-- Overlay: desfoca e impede interação com o fundo -->
+        <div
+          class="absolute inset-0 bg-black opacity-50 backdrop-blur-sm"
+          @click="toggleMenu"
+        ></div>
+        <!-- Painel do menu animado -->
+        <div
+          ref="menuPanel"
+          class="menu-panel relative z-50 top-0 left-0 w-64 h-full bg-gray-200 text-black flex flex-col items-start overflow-y-auto"
+          @click.stop
         >
-          <img
-            v-if="usuario && usuario.foto && usuario.foto.startsWith('http')"
-            :src="usuario.foto"
-            alt="Foto de perfil"
-            class="perfil-img"
-          />
-          <span v-else class="material-symbols-outlined" style="font-size: 80px"
-            >account_circle</span
+          <button
+            class="flex items-center justify-between w-full text-xl p-3 pb-2 mb-6 border-b border-gray-400 cursor-pointer"
+            @click="toggleMenu"
           >
-          <p style="margin-top: 10px; display: flex; align-items: center">
-            <span style="margin-right: 8px"
-              >{{ usuario?.nome?.split(" ")[0] }} {{ " - " }}</span
+            <span class="material-symbols-outlined">close</span>
+            <p class="my-0 ml-0.5 mr-auto text-lg">Fechar</p>
+          </button>
+          <ul class="w-full flex flex-col items-center">
+            <li
+              class="flex flex-col items-center justify-center w-1/2 border-b border-gray-400 pb-4 mb-6"
             >
-            <span
-              v-if="globalStore.userType.toLowerCase() === 'prestador'"
-              style="display: flex; align-items: center"
+              <img
+                v-if="
+                  usuario && usuario.foto && usuario.foto.startsWith('http')
+                "
+                :src="usuario.foto"
+                alt="Foto de perfil"
+                class="w-20 h-20 rounded-full object-cover"
+              />
+              <span v-else class="material-symbols-outlined text-6xl">
+                account_circle
+              </span>
+              <p class="flex items-center mt-2">
+                <span class="mr-2">{{ usuario?.nome?.split(" ")[0] }}</span>
+                <span
+                  v-if="globalStore.userType.toLowerCase() === 'prestador'"
+                  class="flex items-center"
+                >
+                  {{ " - " + usuario?.avaliacao }}
+                  <span class="material-symbols-outlined">star</span>
+                </span>
+              </p>
+            </li>
+
+            <li
+              class="grid grid-cols-[auto_1fr] items-center gap-2 mt-6 cursor-pointer"
             >
-              {{ usuario?.avaliacao }}
-              <span class="material-symbols-outlined">star</span>
-            </span>
-          </p>
-        </li>
-        <li style="margin-top: 30px">
-          <span class="material-symbols-outlined">account_circle</span>
-          Gerenciar Conta
-        </li>
-      </ul>
-      <button class="sair-button" @click="sair">
-        <span class="material-symbols-outlined" style="">logout</span>
-        <p style="margin: 0 auto 0 0">Sair</p>
-      </button>
-    </div>
+              <span class="material-symbols-outlined text-green-400">
+                manage_accounts
+              </span>
+              <p>Gerenciar Conta</p>
+            </li>
+
+            <router-link
+              to="/cadastroPet"
+              class="grid grid-cols-[auto_1fr] items-center gap-2 cursor-pointer mt-4"
+            >
+              <span class="material-symbols-outlined text-green-400">pets</span>
+              <p>Gerenciar Pets</p>
+            </router-link>
+          </ul>
+
+          <button
+            class="border-t border-gray-400 p-3 w-full text-center absolute bottom-0 left-0 flex justify-between items-center gap-2.5 cursor-pointer"
+            @click="sair"
+          >
+            <span class="material-symbols-outlined">logout</span>
+            <p class="my-0 ml-0.5 mr-auto text-lg">Sair</p>
+          </button>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script>
-// eslint-disable-next-line no-unused-vars
+import { animate } from "motion";
 import { globalStore } from "@/store/globalStore";
 
 export default {
@@ -83,6 +103,31 @@ export default {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
+    async onEnter(el, done) {
+      // Seleciona apenas o painel do menu dentro do container
+      const menuPanel = el.querySelector(".menu-panel");
+      await animate(
+        menuPanel,
+        {
+          transform: ["translateX(-100%)", "translateX(0%)"],
+          opacity: [0, 1],
+        },
+        { duration: 0.3, easing: "backInOut" }
+      );
+      done();
+    },
+    async onLeave(el, done) {
+      const menuPanel = el.querySelector(".menu-panel");
+      await animate(
+        menuPanel,
+        {
+          transform: ["translateX(0%)", "translateX(-100%)"],
+          opacity: [1, 0],
+        },
+        { duration: 0.3, easing: "backInOut" }
+      );
+      done();
+    },
     sair() {
       const confirmar = window.confirm("Deseja mesmo sair?");
       if (confirmar) {
@@ -95,95 +140,6 @@ export default {
 };
 </script>
 
-<style>
-.hamburguer-button {
-  border: none;
-  background: none;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.hamburguer-menu {
-  position: fixed; /* Mantém o menu fixo na tela */
-  top: 0;
-  left: 0;
-  width: 250px;
-  height: 100dvh;
-  background-color: rgb(212, 212, 212);
-  color: rgb(0, 0, 0);
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  overflow-y: auto; /* Adiciona rolagem caso o menu tenha muitos itens */
-  z-index: 1000; /* Garante que fique acima do conteúdo */
-}
-
-.voltar-button {
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: rgb(0, 0, 0);
-  margin-bottom: 20px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid rgba(63, 63, 63, 0.546);
-  width: 100%;
-  padding-bottom: 10px;
-}
-
-.menu-list {
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  list-style: none;
-  width: 100%;
-  flex-grow: 0.5;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-li {
-  margin: 10px 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sair-button {
-  background: inherit;
-  border: none;
-  border-top: 1px solid rgba(63, 63, 63, 0.546);
-  color: inherit;
-  padding: 10px;
-  width: 100%;
-  text-align: center;
-  cursor: pointer;
-  position: absolute; /* Fixa o botão "Sair" na parte inferior */
-  bottom: 5%;
-  left: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-button p {
-  font-size: 16px;
-}
-.logout-icon {
-  width: 24px; /* Ajuste conforme necessário */
-  height: 24px;
-  margin-right: 8px; /* Espaço entre o ícone e o texto */
-  fill: black;
-}
-.perfil-img {
-  width: 80px; /* Ajuste o tamanho conforme necessário */
-  height: 80px;
-  border-radius: 50%; /* Faz a imagem ficar circular */
-  object-fit: cover; /* Garante que a imagem preencha o círculo sem distorcer */
-}
+<style scoped>
+/* Estilos adicionais, se necessário */
 </style>

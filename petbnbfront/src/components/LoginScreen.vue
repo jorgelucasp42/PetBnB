@@ -37,12 +37,13 @@
     </div>
     <div class="user-type-switch">
       <button
-        :class="{ active: userType === 'Cliente' }"
+        :class="['mr-4', { active: userType === 'Cliente' }]"
         @click="setUserType('Cliente')"
       >
-        <img src="../assets/icons/icons8-usuário-48.png" width="30" alt="" />
-        <br />
-        Cliente
+        <span class="material-symbols-outlined" style="font-size: 48px"
+          >person</span
+        >
+        <p>Cliente</p>
       </button>
       <button
         :class="{ active: userType === 'Prestador' }"
@@ -50,11 +51,11 @@
       >
         <img
           src="../assets/icons/icons8-aperto-de-mão-48.png"
-          width="30"
+          width="48"
           alt=""
         />
-        <br />
-        Prestador de Serviço
+
+        <p>Prestador de Serviço</p>
       </button>
     </div>
   </div>
@@ -173,11 +174,13 @@ select {
   margin-top: 20px;
 }
 .user-type-switch button {
-  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 10px;
-  margin: 0 5px;
   border: 1px solid #ccc;
-  border-radius: 50px;
+  border-radius: 20px;
   font-size: 1rem;
   background-color: white;
 }
