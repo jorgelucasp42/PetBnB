@@ -22,16 +22,10 @@
           <input
             type="search"
             id="default-search"
-            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-2xl bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Search Mockups, Logos..."
+            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-[50px] focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+            placeholder="Busque endereços, pessoas, serviços..."
             required
           />
-          <button
-            type="submit"
-            class="text-white absolute end-2.5 bottom-2.5 bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2"
-          >
-            Buscar
-          </button>
         </div>
       </form>
     </header>
@@ -84,11 +78,11 @@
         ref="carouselRef"
         class="flex flex-col items-center h-[calc(100vh-200px)] px-6 overflow-x-auto gap-2.5 mt-4 scroll-auto"
       >
-        <h2 class="text font-bold text-xl">Prestadores Encontrados</h2>
+        <h2 class="text font-bold text-xl">Serviços Encontrados</h2>
         <div
           v-for="(servico, index) in servicosFiltrados"
           :key="index"
-          class="w-xs rounded-[12px] p-2 text-left bg-[#f9f9f9] shadow-2xl cursor-pointer hover:bg-[#e9ffe9]"
+          class="w-[22rem] flex flex-col relative rounded-[12px] p-2 text-left bg-[#f9f9f9] shadow-2xl cursor-pointer hover:bg-[#e9ffe9]"
           @click="irPrestador(servico)"
         >
           <img
@@ -97,11 +91,28 @@
             alt=""
           />
 
-          <p>
-            <strong>{{ servico.nome }}</strong>
+          <div class="flex items-center w-full justify-between">
+            <strong
+              >{{ servico.nome }} -
+              {{ capitalizeFirstLetter(servico.tipo) }}</strong
+            >
+            <p class="flex items-center">
+              <span class="material-symbols-outlined">star</span>
+              {{ servico.avaliacao }}
+            </p>
+          </div>
+          <p class="text-[#afafaf]">Localização: {{ servico.localizacao }}</p>
+          <p class="flex items-center">
+            <strong>
+              {{
+                servico.preco.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })
+              }}
+            </strong>
+            / noite
           </p>
-          <p>{{ capitalizeFirstLetter(servico.tipo) }}</p>
-          <p>Localização: {{ servico.localizacao }}</p>
         </div>
         <span></span>
       </div>

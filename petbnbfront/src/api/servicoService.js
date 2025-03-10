@@ -42,7 +42,6 @@ export async function createGaleria(galeriaFormData) {
 export async function getServicos() {
     const token = localStorage.getItem("auth_token");
     const userType = localStorage.getItem("userType");
-    console.log(token);
 
     try {
         const response = await api.get("/servico", {

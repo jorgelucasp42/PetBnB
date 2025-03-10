@@ -61,8 +61,9 @@
             </li>
 
             <router-link
-              to="/cadastroPet"
+              to="/gerenciar-pets"
               class="grid grid-cols-[auto_1fr] items-center gap-2 cursor-pointer mt-4"
+              v-i
             >
               <span class="material-symbols-outlined text-green-400">pets</span>
               <p>Gerenciar Pets</p>

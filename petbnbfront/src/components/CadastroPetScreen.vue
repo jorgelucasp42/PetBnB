@@ -1,243 +1,139 @@
 <template>
-  <!-- eslint-disable vue/html-indent -->
-  <!-- eslint-disable vue/html-closing-bracket-newline -->
-  <!-- eslint-disable vue/singleline-html-element-content-newline -->
-  <!-- eslint-disable vue/max-attributes-per-line -->
-  <!-- eslint-disable vue/html-self-closing -->
-  <header>
-    <button @click="voltar">
+  <div class="flex justify-between items-center mb-4 mt-2 p-2 border-b">
+    <button @click="voltar" class="cursor-pointer">
       <span class="material-symbols-outlined"> arrow_left_alt </span>
     </button>
-    <h1>Cadastro Pet</h1>
-  </header>
-  <hr />
-  <div class="container">
-    <form @submit.prevent="submitForm">
-      <label for="endereco"><strong>Informe seu Endereço:</strong></label>
-      <p class="logradouroNumero">
-        <input
-          id="logradouro"
-          v-model="logradouro"
-          type="text"
-          placeholder="Logradouro*"
-        />
-        <input
-          id="numero"
-          v-model="numero"
-          type="number"
-          placeholder="Número*"
-        />
-      </p>
-      <p class="BairroComplemento">
-        <input id="bairro" v-model="bairro" type="text" placeholder="Bairro*" />
-        <input
-          id="complemento"
-          v-model="complemento"
-          type="text"
-          placeholder="Complemento"
-        />
-      </p>
-      <hr />
-
+    <h1 class="text-2xl font-bold mx-auto">Cadastrar Pet</h1>
+  </div>
+  <div class="p-4">
+    <form
+      @submit.prevent="handleSubmit"
+      class="space-y-4 text-left flex flex-col"
+    >
       <div>
-        <label for="imageUpload">Pets:</label>
-        <div class="image-upload">
-          <label for="imageInput" class="upload-label">
-            <img :src="imageSrc" alt="Preview" />
-            <span v-if="!imagePreview">Adicionar Foto</span>
+        <label for="nome" class="block mb-1 font-medium">Nome</label>
+        <input
+          id="nome"
+          v-model="nome"
+          type="text"
+          class="border rounded p-2 w-full"
+          placeholder="Digite o nome do pet"
+          required
+        />
+      </div>
+      <div>
+        <label for="especie" class="block mb-1 font-medium">Espécie</label>
+        <input
+          id="especie"
+          v-model="especie"
+          type="text"
+          class="border rounded p-2 w-full"
+          placeholder="Digite a espécie do pet"
+          required
+        />
+      </div>
+      <div>
+        <label for="raca" class="block mb-1 font-medium">Raça</label>
+        <input
+          id="raca"
+          v-model="raca"
+          type="text"
+          class="border rounded p-2 w-full"
+          placeholder="Digite a raça do pet"
+          required
+        />
+      </div>
+
+      <!-- Input de Upload da Foto -->
+      <div>
+        <label class="block mb-1 font-medium">Foto do Pet (opcional)</label>
+        <div class="flex items-center space-x-4">
+          <label
+            for="foto"
+            class="cursor-pointer bg-gray-200 p-3 rounded-lg flex items-center space-x-2"
+          >
+            <span class="material-symbols-outlined"> camera </span>
+            <span>Selecionar Foto</span>
           </label>
           <input
-            id="imageInput"
+            id="foto"
             type="file"
+            class="hidden"
+            @change="handleFileChange"
             accept="image/*"
-            hidden
-            @change="onImageChange"
+          />
+        </div>
+
+        <!-- Pré-visualização da imagem -->
+        <div v-if="fotoPreview" class="mt-4">
+          <img
+            :src="fotoPreview"
+            alt="Pré-visualização da Foto"
+            class="w-32 h-32 object-cover rounded-lg shadow-md"
           />
         </div>
       </div>
 
-      <div class="nomeDescricao">
-        <input
-          id="nomePet"
-          v-model="nomePet"
-          type="text"
-          placeholder="Nome do Pet"
-        />
-
-        <select id="tipoPet" v-model="tipoPet">
-          <option value="cachorro">Cachorro</option>
-          <option value="gato">Gato</option>
-          <option value="calopsita">Calopsita</option>
-          <option value="canario">Canário-do-reino / Canário-belga</option>
-          <option value="chinchila">Chinchila</option>
-          <option value="porquinho-da-india">Porquinho-da-Índia</option>
-          <option value="coelho">Coelho</option>
-          <option value="hamster">Hamster</option>
-          <option value="periquito">Periquito-australiano</option>
-          <option value="pombo">Pombo-doméstico</option>
-        </select>
-
-        <textarea
-          v-model="descricao"
-          placeholder="Escreva uma descrição..."
-          rows="4"
-        ></textarea>
-
-        <input type="submit" value="Salvar" />
-        <input type="submit" value="Continuar" />
-      </div>
+      <button
+        type="submit"
+        class="bg-green-400 hover:bg-green-600 active:bg-green-600 text-white font-bold py-2 px-4 rounded"
+      >
+        Cadastrar
+      </button>
     </form>
   </div>
 </template>
 
-<script>
-import { ref, computed } from "vue";
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { createPet } from "@/api/servicoPets";
 
-export default {
-  setup() {
-    const logradouro = ref("");
-    const numero = ref("");
-    const bairro = ref("");
-    const complemento = ref("");
-    const nomePet = ref("");
-    const tipoPet = ref("");
-    const descricao = ref("");
-    const imagePreview = ref(null);
+const nome = ref("");
+const especie = ref("");
+const raca = ref("");
+const foto = ref(null);
+const fotoPreview = ref(null);
 
-    const imageSrc = computed(() => {
-      return (
-        imagePreview.value ||
-        new URL("@/assets/imgs/Foto.png", import.meta.url).href
-      );
-    });
+const router = useRouter();
+const authToken = localStorage.getItem("auth_token");
 
-    const onImageChange = (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          imagePreview.value = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
+// Função para capturar o arquivo de imagem e gerar a pré-visualização
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    foto.value = file;
+    const reader = new FileReader();
+    reader.onload = () => {
+      fotoPreview.value = reader.result;
     };
+    reader.readAsDataURL(file);
+  }
+};
 
-    const voltar = () => {
-      window.history.back();
-    };
+const voltar = () => {
+  router.push("/gerenciar-pets");
+};
 
-    const submitForm = () => {
-      console.log("Formulário enviado!");
-    };
+const handleSubmit = async () => {
+  try {
+    const formData = new FormData();
+    formData.append("nome", nome.value);
+    formData.append("especie", especie.value);
+    formData.append("raca", raca.value);
+    if (foto.value) {
+      formData.append("foto", foto.value);
+    }
 
-    return {
-      logradouro,
-      numero,
-      bairro,
-      complemento,
-      nomePet,
-      tipoPet,
-      descricao,
-      imagePreview,
-      imageSrc,
-      onImageChange,
-      voltar,
-      submitForm,
-    };
-  },
+    await createPet(authToken, formData);
+
+    router.push("/gerenciar-pets");
+  } catch (error) {
+    console.error("Erro ao cadastrar pet:", error);
+  }
 };
 </script>
 
 <style scoped>
-header {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-header h1 {
-  font-size: 1.2rem;
-  color: #333;
-  margin: 0 auto;
-}
-
-header button {
-  height: 35px;
-  width: auto;
-  border: none;
-  background-color: transparent;
-}
-
-.container {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-form {
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-}
-
-form input,
-form select,
-form textarea {
-  font-size: 1em;
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 15px;
-  box-sizing: border-box;
-}
-
-form select {
-  box-shadow: 2px 4px 8px black;
-}
-
-input[type="submit"] {
-  width: 100%;
-  padding: 15px;
-  background-color: #00a000;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  margin-top: 15px;
-  cursor: pointer;
-}
-
-input[type="submit"]:hover {
-  background-color: #00a0009d;
-}
-
-.image-upload {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 70vw;
-  height: 30vh;
-  border-radius: 15px;
-  overflow: hidden;
-}
-
-.image-upload img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.logradouroNumero {
-  display: flex;
-  gap: 6px;
-}
-
-.BairroComplemento {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
+/* Adicione seus estilos personalizados aqui */
 </style>

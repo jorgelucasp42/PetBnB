@@ -49,11 +49,9 @@
         :class="{ active: userType === 'Prestador' }"
         @click="setUserType('Prestador')"
       >
-        <img
-          src="../assets/icons/icons8-aperto-de-mão-48.png"
-          width="48"
-          alt=""
-        />
+        <span class="material-symbols-outlined" style="font-size: 48px"
+          >handshake</span
+        >
 
         <p>Prestador de Serviço</p>
       </button>

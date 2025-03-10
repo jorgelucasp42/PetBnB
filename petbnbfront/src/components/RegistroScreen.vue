@@ -34,10 +34,7 @@
         <label for="imageUpload">Foto de Usuário:</label>
         <div class="image-upload">
           <label for="imageInput" class="upload-label">
-            <img
-              :src="imagePreview || require('@/assets/imgs/Foto.png')"
-              alt="Preview"
-            />
+            <img :src="imagePreview || getImageUrl()" alt="Preview" />
             <span v-if="!imagePreview">Adicionar Foto</span>
           </label>
           <input
@@ -58,7 +55,7 @@
         id="itiposervice"
         v-model="tipoService"
       >
-        <option value="Cuidador">Cuidador</option>
+        <option value="Cuidador" selected>Cuidador</option>
         <option value="Treinador">Treinador</option>
         <option value="Veterinario">Veterinario</option>
       </select>
@@ -71,6 +68,8 @@
 import { useRegisterForm } from "@/composables/useRegisterForm";
 export default {
   setup() {
+    const getImageUrl = () =>
+      new URL("@/assets/imgs/Foto.png", import.meta.url).href;
     const {
       userType,
       nome,
@@ -91,6 +90,7 @@ export default {
       imagePreview,
       onImageChange,
       submitForm,
+      getImageUrl,
     };
   },
   computed: {

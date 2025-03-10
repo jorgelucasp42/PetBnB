@@ -83,10 +83,7 @@
       <label for="imageUpload">Galeria de Áreas:</label>
       <div class="image-upload">
         <label for="imageInput" class="upload-label">
-          <img
-            :src="imagePreview || require('../assets/imgs/Foto.png')"
-            alt="Preview"
-          />
+          <img :src="imagePreview || getImageUrl()" alt="Preview" />
         </label>
         <input
           id="imageInput"
@@ -131,6 +128,8 @@ import { useAuthGuard } from "@/composables/useAuthGuard";
 export default {
   setup() {
     useAuthGuard();
+    const getImageUrl = () =>
+      new URL("@/assets/imgs/Foto.png", import.meta.url).href;
     const {
       logradouro,
       numero,
@@ -169,6 +168,7 @@ export default {
       cepFetchError,
       galleryItems,
       addGalleryItem,
+      getImageUrl,
     };
   },
 
