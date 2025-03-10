@@ -1,6 +1,14 @@
 import { Transform } from 'class-transformer';
-import { IsString, IsNumber, IsOptional, IsUrl, IsDate, Matches, Min, Max } from 'class-validator';
-
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsUrl,
+  IsDate,
+  Matches,
+  Min,
+  Max,
+} from 'class-validator';
 
 export class CreatePetDTO {
   @IsString()
@@ -12,10 +20,23 @@ export class CreatePetDTO {
   @IsString()
   raca: string;
 
+  @IsOptional()
   @IsString()
-  @IsUrl()
-  foto: string;
+  foto?: string;
 
   @IsString()
   dono_id: string;
+}
+export class RecCreatePetDTO {
+  @IsString()
+  nome: string;
+
+  @IsString()
+  especie: string;
+
+  @IsString()
+  raca: string;
+
+  @IsOptional()
+  foto?: string;
 }

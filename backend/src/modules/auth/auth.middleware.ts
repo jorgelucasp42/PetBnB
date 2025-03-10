@@ -22,7 +22,15 @@ export class AuthMiddleware implements NestMiddleware {
       throw new UnauthorizedException('Auth Token ou userType não informado.');
     }
 
-    let user;
+    let user: {
+      id: string;
+      nome: string;
+      cpf: string;
+      telefone: string;
+      foto: string | null;
+      auth_token: string | null;
+      expire_date: Date | null;
+    } | null;
     if (userType.toLowerCase() === 'cliente') {
       user = await this.clienteService.findByAuthToken(authToken);
     } else if (userType.toLowerCase() === 'prestador') {

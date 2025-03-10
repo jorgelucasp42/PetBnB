@@ -14,18 +14,23 @@ export class UploadService {
   async uploadImage(
     base64Image: string,
     userId: string,
-    userType: 'prestador' | 'cliente',
+    type: 'prestador' | 'cliente' | 'pet',
+    petName?: string,
   ): Promise<string> {
     const matches = base64Image.match(/^data:(.+);base64,(.*)$/);
     const imageData = matches ? matches[2] : base64Image;
 
-    const hashedId = createHash('md5').update(userId).digest('hex');
+    let uniqueIdentifier = createHash('md5').update(userId).digest('hex');
+    if (type === 'pet' && petName) {
+      const petNameHash = createHash('md5').update(petName).digest('hex');
+      uniqueIdentifier = `${uniqueIdentifier}-${petNameHash}`;
+    }
 
     try {
       const result = await cloudinary.uploader.upload(
         `data:image/jpeg;base64,${imageData}`,
         {
-          public_id: `${userType}/${hashedId}-${Date.now()}`,
+          public_id: `${type}/${uniqueIdentifier}-${Date.now()}`,
           overwrite: true,
         },
       );

@@ -58,7 +58,7 @@ model Pet {
   nome         String
   especie      String
   raca         String
-  foto         String
+  foto         String?
   dono_id      String                 @db.ObjectId
   Cliente      Cliente                @relation(fields: [dono_id], references: [id])
   solicitacoes SolicitacaoDeServico[] // Relacionamento com Solicitação

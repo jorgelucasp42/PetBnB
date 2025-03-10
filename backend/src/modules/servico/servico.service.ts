@@ -44,6 +44,8 @@ export class ServicoService {
           ? servico.PrestadorDeServico.Galeria[0].imagem
           : null,
       descricao: servico.PrestadorDeServico.descricao || '',
+      preco: servico.preco,
+      avaliacao: servico.PrestadorDeServico.avaliacao,
     }));
   }
 

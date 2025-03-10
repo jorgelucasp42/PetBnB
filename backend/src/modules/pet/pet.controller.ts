@@ -1,19 +1,49 @@
-import { Controller, Post, Get, Put, Delete, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Req,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { PetService } from './pet.service';
-import { CreatePetDTO } from './dto/pet.dto';
+import { CreatePetDTO, RecCreatePetDTO } from './dto/pet.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 
 @Controller('pet')
 export class PetController {
-    constructor(private readonly petService: PetService) {}
+  constructor(private readonly petService: PetService) {}
 
   @Post()
-  async create(@Body() data: CreatePetDTO) {
-    return this.petService.create(data);
+  @UseInterceptors(FileInterceptor('foto', { storage: memoryStorage() }))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() data: RecCreatePetDTO,
+    @Req() req: any,
+  ) {
+    const userId = req.user.id;
+    if (file) {
+      const base64 = file.buffer.toString('base64');
+      const dataUrl = `data:${file.mimetype};base64,${base64}`;
+      data.foto = dataUrl;
+    }
+    const createData: CreatePetDTO = {
+      ...data,
+      dono_id: userId,
+    };
+    return this.petService.create(createData);
   }
 
   @Get()
-  async findAll() {
-    return this.petService.findAll();
+  async findAll(@Req() req: any) {
+    const userId = req.user.id;
+    const pets = await this.petService.findAll(userId);
+    return pets;
   }
 
   @Get(':id')
