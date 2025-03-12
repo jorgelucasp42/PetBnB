@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center mb-4 mt-2 p-2 border-b">
+  <div class="flex justify-between items-center mb-4 mt-2 p-2 shadow">
     <button @click="voltar" class="cursor-pointer">
       <span class="material-symbols-outlined"> arrow_left_alt </span>
     </button>

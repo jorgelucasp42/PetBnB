@@ -1,18 +1,17 @@
 <template>
+  <div class="flex justify-between items-center mb-4 mt-2 p-2 shadow">
+    <button @click="voltar">
+      <span class="material-symbols-outlined"> arrow_left_alt </span>
+    </button>
+    <h1 class="text-xl font-bold mx-auto">Gerencie seus Pets</h1>
+    <button
+      class="bg-green-300 hover:bg-green-400 active:bg-green-400 text-black font-bold py-2 px-4 rounded cursor-pointer"
+      @click="handleCadastrar"
+    >
+      Cadastrar Pet
+    </button>
+  </div>
   <div class="p-4">
-    <!-- Botão Cadastrar Pet -->
-    <div class="flex justify-between mb-4">
-      <button @click="voltar">
-        <span class="material-symbols-outlined"> arrow_left_alt </span>
-      </button>
-      <button
-        class="bg-green-300 hover:bg-green-400 active:bg-green-400 text-black font-bold py-2 px-4 rounded cursor-pointer"
-        @click="handleCadastrar"
-      >
-        Cadastrar Pet
-      </button>
-    </div>
-
     <!-- Área de loading e erros -->
     <div v-if="loading" class="text-center text-gray-500">Buscando pets...</div>
     <div v-if="error" class="text-center text-red-500">
